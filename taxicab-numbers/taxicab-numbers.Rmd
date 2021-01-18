@@ -1,0 +1,82 @@
+---
+title: "Ramanujan Numbers"
+output: 
+  pdf_document:
+    highlight: tango
+    latex_engine: pdflatex
+lang: ru-RU
+fontsize: 10.5pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+```
+
+## Числа Рамануджана
+
+Риниваса Рамануджан – индийский математик, славившийся своей интуицией в области чисел. Когда английский математик Годфри Харди навестил его однажды в больнице, он обмолвился, что номером такси, на котором он приехал, было 17291729, такое скучное и заурядное число. На что Рамануджан ответил: "Нет, нет! Это очень интересное число. Это наименьшее число, выражаемое как сумма двух кубов двумя разными способами". Другими словами:
+
+$$1729 = 1^3 + 12^3 = 9^3 + 10^3$$
+$$1729 = 1^3 + 12^3 = 9^3 + 10^3$$
+
+
+
+```{r}
+# Create an hash table of cubes from 1 to 100
+numbers <- 1:100
+cubes <- numbers ^ 3
+
+# The possible pairs of numbers
+pairs <- combn(numbers, 2)
+
+# Now sum the cubes of the combinations
+# This takes every couple and sums the values of the cubes
+# with the appropriate index 
+sums <- apply(pairs, 2, function(x) {sum(cubes[x])})
+```
+
+> `numbers` will be: `1, 2, 3, 4, ..., 98, 99, 100`
+
+> `cubes` will be: `1, 8, 27, 64, ..., 941192, 970299, 1000000`
+
+> `pairs` will contain:
+    
+>       [,1] [,2] [,3] [,4] [,5] ... [,4949] [,4950]
+
+>[1,]    1    1    1    1    1 ...      98      99
+
+>[2,]    2    3    4    5    6 ...     100     100
+
+```{r}
+which(sums == 1729) # the ids of the couples summing to 1729
+pairs[,11] 
+pairs[,765]
+```
+
+Now, let's find which are the couples with the same sums.
+
+`table(sums)` gives us a neat summary like
+
+> 9 28 35 65 72 91 ...                        1674 1729 1736    
+  1  1  1  1  1  1 .... <lots of 1s here> ...    1    2    1
+  
+So let's just find which elements of `table(sums) are == 2`
+
+```{r}
+doubles <- which(table(sums) == 2)
+
+taxi.numbers <- as.integer(names(doubles))
+```
+
+And finally (to be read two-by-two), the corresponding integer pairs
+
+```{r}
+pairs[,doubles]
+```
+So:
+
+1,12 and 9,10 give 1729
+2,16 and 9,15 give 4104
+2,24 and 18,20 give 13832
+and so on!
