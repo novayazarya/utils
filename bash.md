@@ -71,7 +71,7 @@ echo $TRAIN_SIZE
 697
 ```
 
-```console
+```szh
 cat aact-fillna.csv | cut -d"," -f3,6,7 | shuf > shuffled-aact.csv
 cat shuffled-aact.csv | head -n $TRAIN_SIZE > train-aact.csv
 cat shuffled-aact.csv | tail -n +$(($TRAIN_SIZE+1)) > test-aact.csv
